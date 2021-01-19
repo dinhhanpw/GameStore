@@ -8,17 +8,17 @@ using System.Windows.Controls;
 
 namespace GameStore.ViewModels
 {
-    class CaroGameViewModel : BaseViewModel, IGame
+    public class CaroGameViewModel : BaseViewModel, IGame
     {
-       
-
         private int[,] board;
         private Button[,] buttons;
         private int sizeBoard;
         private double widthBoard;
         private double heightBoard;
         private readonly int margin = 3;
-        private int turn = 0;
+        public int Turn { set; get; } = 0;
+        private CaroInvoker caroInvoker;
+
         public WrapPanel BoardGame { get; set; } = new WrapPanel();
 
         public void InitializeNewGame()
@@ -35,7 +35,7 @@ namespace GameStore.ViewModels
             BoardGame.Children.Clear();
             board = new int[sizeBoard, sizeBoard];
             buttons = new Button[sizeBoard, sizeBoard];
-            turn = 1;
+            Turn = 1;
 
             widthBoard = BoardGame.ActualWidth;
             heightBoard = BoardGame.ActualHeight;
@@ -62,77 +62,37 @@ namespace GameStore.ViewModels
 
         public void PauseGame()
         {
-            throw new NotImplementedException();
+            BoardGame.IsEnabled = false;
+            BoardGame.Opacity = 0.5;
         }
 
         public void PlayGame()
         {
-            throw new NotImplementedException();
+            BoardGame.IsEnabled = true;
+            BoardGame.Opacity = 1;
         }
 
         public void Redo()
         {
-            throw new NotImplementedException();
+            caroInvoker.Redo();
+            
         }
 
         public void StopGame()
         {
-            throw new NotImplementedException();
+            PauseGame();
         }
 
         public void Undo()
         {
-            throw new NotImplementedException();
-        }
+            caroInvoker.Undo();        }
 
         public CaroGameViewModel()
         {
-            
+            caroInvoker = new CaroInvoker();
         }
 
-        /// <summary>
-        /// khởi tạo một bàn cờ mới khi chọn New Game
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void createNewGame_Click(object sender, RoutedEventArgs e)
-        {
-            CaroGameConfigDialog dialog = new CaroGameConfigDialog();
 
-            // gọi hộp thoại để điền kích thước bàn cờ
-            if (dialog.ShowDialog() == true)
-            {
-                sizeBoard = dialog.Size;
-            }
-
-            // dọn sạch bàn cờ cũ
-            BoardGame.Children.Clear();
-            board = new int[sizeBoard, sizeBoard];
-            buttons = new Button[sizeBoard, sizeBoard];
-            turn = 1;
-
-            
-            // tính toán chiều rộng, chiều cao của button
-            double widthButton = (widthBoard - 4 * sizeBoard) / sizeBoard;
-            double heightButton = (heightBoard - 4 * sizeBoard) / sizeBoard;
-
-            // cấu hình và gắn các button vào bàn cờ
-            for (int i = 0; i < sizeBoard; ++i)
-            {
-                for (int j = 0; j < sizeBoard; ++j)
-                {
-                    Button button = CreateNewButton(widthButton, heightButton, i, j);
-
-                    buttons[i, j] = button;
-                    BoardGame.Children.Add(buttons[i, j]);
-
-                }
-            }
-
-            // kích hoạt bàn cờ
-            BoardGame.IsEnabled = true;
-
-        }
 
         /// <summary>
         /// tạo và cấu hình cho một button mới
@@ -153,10 +113,23 @@ namespace GameStore.ViewModels
             button.Height = height;
             button.Margin = new Thickness(margin, margin, 0, 0);
             button.BorderThickness = thickness;
-            button.Tag = new Tuple<int, int>(row, col);
+            button.Tag = new ButtonState(row, col, 0);
             button.Click += Button_Click;
 
             return button;
+        }
+
+        public void SetButtonState(ButtonState state, int idState)
+        {
+            board[state.Row, state.Col] = idState;
+            Button button = buttons[state.Row, state.Col];
+            button.Tag = state;
+            state.State.Dislay(button);
+        }
+
+        public ButtonState GetButtonState(int row, int col)
+        {
+            return (ButtonState)buttons[row, col].Tag;
         }
 
         /// <summary>
@@ -168,31 +141,29 @@ namespace GameStore.ViewModels
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
-            Tuple<int, int> pos = button.Tag as Tuple<int, int>;
+            ButtonState buttonState = button.Tag as ButtonState;
             int i, j;
-            i = pos.Item1;
-            j = pos.Item2;
+            i = buttonState.Row;
+            j = buttonState.Col;
 
             // kiểm tra vị trí này đã có cờ của người chơi
             if (board[i, j] == 0)
             {
-                if (turn == 1)
-                {
-                    button.Content = "X";
-                }
-                else
-                {
-                    button.Content = "O";
-                }
+                ButtonState oldState = new ButtonState(i, j, 0);
+                caroInvoker.AddUndoCommand(new CaroNavigationCommand(this, oldState, 0));
+                caroInvoker.ClearRedoCommand();
 
-                board[i, j] = turn;
+                buttonState.State = ICaroState.GetState(Turn);
+                buttonState.State.Dislay(button);
+                
+                board[i, j] = Turn;
                 // kiểm tra điều kiện thắng
                 int winner = checkWin(board, i, j);
 
                 if (winner == 0)
                 {
                     // nếu chưa có người thắng thì đổi người đánh
-                    turn = turn % 2 + 1;
+                    Turn = Turn % 2 + 1;
                     return;
                 }
 

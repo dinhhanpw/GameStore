@@ -5,10 +5,11 @@ using System.Windows.Controls;
 
 namespace GameStore.ViewModels.Helpers
 {
-    public abstract class CaroState
+    class FirstPlayerState : ICaroState
     {
-        protected int row, col;
-
-        public abstract void Dislay(Button button);
+        public void Dislay(Button button)
+        {
+            button.Content = "X";
+        }
     }
 }

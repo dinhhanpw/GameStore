@@ -4,36 +4,40 @@ using System.Text;
 
 namespace GameStore.ViewModels.Helpers
 {
-    class PuzzleInvoker : Invoker
+    public class CaroInvoker : Invoker
     {
-        public PuzzleInvoker()
+        public CaroInvoker()
         {
             undoCommand = new Stack<INavigationCommand>();
             redoCommand = new Stack<INavigationCommand>();
         }
+
         public override void Redo()
         {
-            if (redoCommand.Count <= 0) return;
+            if (redoCommand.Count == 0) return;
+
             INavigationCommand command = redoCommand.Pop();
-            undoCommand.Push(command);
             command.Redo();
-            
+            undoCommand.Push(command);
         }
 
         public override void Undo()
         {
-            // kiểm tra danh sách những lần di chuyển trước đó
-            if (undoCommand.Count <= 0) return;
+            if (undoCommand.Count == 0) return;
 
             INavigationCommand command = undoCommand.Pop();
-            redoCommand.Push(command);
             command.Undo();
-
+            redoCommand.Push(command);
         }
 
-        public void AddUndoCommand(PuzzleNavigationCommand command)
+        public void AddUndoCommand(CaroNavigationCommand command)
         {
             undoCommand.Push(command);
+        }
+
+        public void AddRedoCommand(CaroNavigationCommand command)
+        {
+            redoCommand.Push(command);
         }
 
         public void ClearRedoCommand()
