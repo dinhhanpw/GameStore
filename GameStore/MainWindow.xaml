@@ -9,14 +9,24 @@
         xmlns:Fluent="urn:fluent-ribbon"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
+        Icon="Icons/ic_game.png"
         Title="MainWindow" Height="450" Width="800">
     <Window.DataContext>
         <viewModel:MainViewModel/>
     </Window.DataContext>
     <Window.Resources>
+        <DataTemplate DataType="{x:Type viewModel:ChooseGameViewModel}">
+            <view:ChooseGameView/>
+        </DataTemplate>
+        
         <DataTemplate DataType="{x:Type viewModel:PuzzleGameViewModel}">
             <view:PuzzleGameView/>
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:CaroGameViewModel}">
+            <view:CaroGameView/>
+        </DataTemplate>
+        
     </Window.Resources>
     <Grid>
 

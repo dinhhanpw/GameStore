@@ -1,18 +1,28 @@
 ﻿using GameStore.ViewModels.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
 using System.Windows.Input;
 
 namespace GameStore.ViewModels
 {
     class MainViewModel : BaseViewModel
     {
-        public PuzzleGameViewModel ContentView
+        private BaseViewModel _ContentView;
+        private ChooseGameViewModel defaultView;
+
+        public BaseViewModel ContentView
         {
-            get; set;
-        } = new PuzzleGameViewModel();
+            get { return _ContentView; }
+            set
+            {
+                SetBindableProperty(ref _ContentView, value);
+
+                if (_ContentView is IGame)
+                {
+                    Game = (IGame)_ContentView;
+                    Game.InitializeNewGame();
+                }
+                else Game = null;
+            }
+        }
 
         public IGame Game { get; set; }
 
@@ -25,14 +35,22 @@ namespace GameStore.ViewModels
 
         public MainViewModel()
         {
-            Game = ContentView;
-            NewGameCommand = new RelayCommand<object>(obj => true, obj => Game.InitializeNewGame());
-            PlayCommand = new RelayCommand<object>(obj => true, obj => Game.PlayGame());
-            PauseCommand = new RelayCommand<object>(obj => true, obj => Game.PauseGame());
-            StopCommand = new RelayCommand<object>(obj => true, obj => Game.StopGame());
-            UndoCommand = new RelayCommand<object>(obj => true, obj => Game.Undo());
-            RedoCommand = new RelayCommand<object>(obj => true, obj => Game.Redo());
-            
+            defaultView = new ChooseGameViewModel(this);
+            ContentView = defaultView;
+
+            //Game = ContentView;
+            NewGameCommand = new RelayCommand<object>(obj => true, obj => Game?.InitializeNewGame());
+            PlayCommand = new RelayCommand<object>(obj => true, obj => Game?.PlayGame());
+            PauseCommand = new RelayCommand<object>(obj => true, obj => Game?.PauseGame());
+            StopCommand = new RelayCommand<object>(obj => true, obj =>
+            {
+                Game?.StopGame();
+                ContentView = defaultView;
+            });
+            UndoCommand = new RelayCommand<object>(obj => true, obj => Game?.Undo());
+            RedoCommand = new RelayCommand<object>(obj => true, obj => Game?.Redo());
+
         }
+
     }
 }

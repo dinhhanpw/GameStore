@@ -1,10 +1,6 @@
 ﻿using GameStore.Dialogs;
 using GameStore.ViewModels.Helpers;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -52,7 +48,7 @@ namespace GameStore.ViewModels
                 SetBindableProperty(ref _TimeString, value);
             }
         }
-        private Image sampleImage = new Image();
+
         public ICommand MoveCommand { get; set; }
         public PuzzleGameViewModel()
         {

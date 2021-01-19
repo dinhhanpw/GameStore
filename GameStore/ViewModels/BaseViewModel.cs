@@ -8,6 +8,31 @@ namespace GameStore.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
+        private static Dictionary<string, BaseViewModel> views = new Dictionary<string, BaseViewModel>();
+
+        protected static BaseViewModel GetView(string viewName)
+        {
+            if (views.ContainsKey(viewName))
+                return views[viewName];
+
+            switch (viewName)
+            {
+                case "caro":
+                    views.Add(viewName, new CaroGameViewModel());
+                    break;
+
+                case "puzzle":
+                    views.Add(viewName, new PuzzleGameViewModel());
+                    break;
+
+                default:
+                    return null;
+            }
+
+            return views[viewName];
+
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void SetBindableProperty<T>(ref T property, T value, [CallerMemberName] string propertyName = null)

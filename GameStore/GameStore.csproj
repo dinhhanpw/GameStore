@@ -47,6 +47,8 @@
     </Resource>
     <Resource Include="icons\ic_undo.png">
     </Resource>
+    <Resource Include="icons\ic_game.png"/>
+    <Resource Include="icons\ic_caro.png"/>
   </ItemGroup>
 
 </Project>
