@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  
+  <ItemGroup>
+    <PackageReference Include="Fluent.Ribbon" Version="8.0.3" />
+    <PackageReference Include="MvvmLight" Version="5.4.1.1" />
+    <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
+    <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="control\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="icons\ic_highscore.png">
+    </Resource>
+    <Resource Include="icons\ic_load.png">
+    </Resource>
+    <Resource Include="icons\ic_music.png">
+    </Resource>
+    <Resource Include="icons\ic_newgame.png">
+    </Resource>
+    <Resource Include="icons\ic_off.png">
+    </Resource>
+    <Resource Include="icons\ic_on.png">
+    </Resource>
+    <Resource Include="icons\ic_pause.png">
+    </Resource>
+    <Resource Include="icons\ic_play.png">
+    </Resource>
+    <Resource Include="icons\ic_puzzle.png">
+    </Resource>
+    <Resource Include="icons\ic_redo.png">
+    </Resource>
+    <Resource Include="icons\ic_save.png">
+    </Resource>
+    <Resource Include="icons\ic_setting.png">
+    </Resource>
+    <Resource Include="icons\ic_stop.png">
+    </Resource>
+    <Resource Include="icons\ic_undo.png">
+    </Resource>
+  </ItemGroup>
+
+</Project>

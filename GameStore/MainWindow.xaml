@@ -1,0 +1,80 @@
+﻿<Window x:Class="GameStore.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GameStore"
+        xmlns:viewModel="clr-namespace:GameStore.ViewModels"
+        xmlns:view="clr-namespace:GameStore.Views"
+        xmlns:Fluent="urn:fluent-ribbon"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.DataContext>
+        <viewModel:MainViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewModel:PuzzleGameViewModel}">
+            <view:PuzzleGameView/>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Fluent:Ribbon Grid.ColumnSpan="2">
+
+            <Fluent:RibbonTabItem Header="Game" Background="CornflowerBlue">
+                <Fluent:RibbonGroupBox Header="File">
+                    <Fluent:Button Command="{Binding NewGameCommand}" Header="New" LargeIcon="Icons/ic_newgame.png"
+                                   Margin="2 0" RenderOptions.BitmapScalingMode="HighQuality" />
+                    
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="play">
+                    <Fluent:Button Command="{Binding PlayCommand}" Header="Play" LargeIcon="Icons/ic_play.png" 
+                                   Margin="2 0" RenderOptions.BitmapScalingMode="HighQuality"
+                                  />
+                    <Fluent:Button Command="{Binding PauseCommand}" Header="Pause" LargeIcon="Icons/ic_pause.png" 
+                                   Margin="2 0" RenderOptions.BitmapScalingMode="HighQuality" 
+                                   />
+                    <Fluent:Button Command="{Binding StopCommand}" Header="Stop" LargeIcon="Icons/ic_stop.png" 
+                                   Margin="2 0" RenderOptions.BitmapScalingMode="HighQuality" 
+                                   />
+                </Fluent:RibbonGroupBox>
+
+                <Fluent:RibbonGroupBox>
+                    <Fluent:Button Command="{Binding UndoCommand}" Header="Undo" LargeIcon="Icons/ic_undo.png"
+                                   Margin="2 0" RenderOptions.BitmapScalingMode="HighQuality" />
+                    <Fluent:Button Command="{Binding RedoCommand}" Header="Redo" LargeIcon="Icons/ic_redo.png"
+                                   Margin="2 0" RenderOptions.BitmapScalingMode="HighQuality" />
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+
+            <Fluent:RibbonTabItem Header="Options">
+
+                <Fluent:RibbonGroupBox Header="Music">
+                    <Fluent:ToggleButton Name="toggleMusicButton" LargeIcon="Icons/ic_music.png" 
+                                         Padding="5 0" RenderOptions.BitmapScalingMode="HighQuality" 
+                                         />
+
+                    <Fluent:RadioButton GroupName="music" Header="Music 1"
+                                        IsChecked="True" />
+                    <Fluent:RadioButton GroupName="music" Header="Music 2"
+                                       />
+                    <Fluent:RadioButton GroupName="music" Header="Music 3"
+                                        />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox >
+                    <Fluent:Button Header="High Score" LargeIcon="Icons/ic_highscore.png"
+                                   />
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+
+        </Fluent:Ribbon>
+
+        <ContentControl Grid.Row="1" Content="{Binding ContentView}"/>
+    </Grid>
+</Window>
